@@ -41,6 +41,8 @@ python test.py
 ```
 
 you can modify code everything. plz read my code and improve better!<br>
-I show you recent nn for help.
+I show you recent nn and old repos for help.
+[pre1](https://github.com/jasmine-jp/predict_dance)
+[pre2](https://github.com/jasmine-jp/predict_dance2)
 ## flow chart
 ![flowchart](src/git/flowchart.png)
