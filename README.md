@@ -1,8 +1,3 @@
-<style>
-  th: { background: black; }
-  td: { background: white; }
-</style>
-
 ## What is predict_dance ?
 ***predict_dance*** is enable to decide which videoes belong to ***[elegant, dance, other]***.
 
