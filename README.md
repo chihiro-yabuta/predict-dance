@@ -1,5 +1,36 @@
+<style>
+  th: { background: black; }
+  td: { background: white; }
+</style>
+
 ## What is predict_dance ?
 ***predict_dance*** is enable to decide which videoes belong to ***[elegant, dance, other]***.
+
+<table>
+  <tr><th>\</th><th>resize</th><th>gray</th><th>binary</th><th>limit</th></tr>
+  <tr>
+    <th>elegant</th>
+    <td><img src="src/git/ja_resize.gif" width=200></td>
+    <td><img src="src/git/ja_gray.gif" width=200></td>
+    <td><img src="src/git/ja_bin.gif" width=200></td>
+    <td><img src="src/git/ja_limit.gif" width=200></td>
+  </tr>
+  <tr>
+    <th>dance</th>
+    <td><img src="src/git/aito_resize.gif" width=200></td>
+    <td><img src="src/git/aito_gray.gif" width=200></td>
+    <td><img src="src/git/aito_bin.gif" width=200></td>
+    <td><img src="src/git/aito_limit.gif" width=200></td>
+  </tr>
+  <tr>
+    <th>other</th>
+    <td><img src="src/git/exer_resize.gif" width=200></td>
+    <td><img src="src/git/exer_gray.gif" width=200></td>
+    <td><img src="src/git/exer_bin.gif" width=200></td>
+    <td><img src="src/git/exer_limit.gif" width=200></td>
+  </tr>
+</table>
+
 ## How do I start ?
 first of all, you need to install **dependencies**.<br>
 you should type this command.
