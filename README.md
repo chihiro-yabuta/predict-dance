@@ -1,5 +1,5 @@
 ## What is predict_dance ?
-***predict_dance*** is enable to decide which videoes belong to ***[elegant, dance, other]***.
+***predict_dance*** is enable to decide which videos belong to ***[elegant, dance, other]***.
 
 <table>
   <tr><th>\</th><th>resize</th><th>gray</th><th>binary</th><th>limit</th></tr>
@@ -25,6 +25,8 @@
     <td><img src="src/git/exer_limit.gif" width=200></td>
   </tr>
 </table>
+then, you can get result of video prediction.
+![flowchart](src/git/result.png)
 
 ## How do I start ?
 first of all, you need to install **dependencies**.<br>
