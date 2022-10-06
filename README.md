@@ -5,24 +5,24 @@
   <tr><th>\</th><th>resize</th><th>gray</th><th>binary</th><th>limit</th></tr>
   <tr>
     <th>elegant</th>
-    <td><img src="src/git/ja_resize.gif" width=160></td>
-    <td><img src="src/git/ja_gray.gif" width=160></td>
-    <td><img src="src/git/ja_bin.gif" width=160></td>
-    <td><img src="src/git/ja_limit.gif" width=160></td>
+    <td><img src="src/git/ja_resize.gif" width=159></td>
+    <td><img src="src/git/ja_gray.gif" width=159></td>
+    <td><img src="src/git/ja_bin.gif" width=159></td>
+    <td><img src="src/git/ja_limit.gif" width=159></td>
   </tr>
   <tr>
     <th>dance</th>
-    <td><img src="src/git/aito_resize.gif" width=160></td>
-    <td><img src="src/git/aito_gray.gif" width=160></td>
-    <td><img src="src/git/aito_bin.gif" width=160></td>
-    <td><img src="src/git/aito_limit.gif" width=160></td>
+    <td><img src="src/git/aito_resize.gif" width=159></td>
+    <td><img src="src/git/aito_gray.gif" width=159></td>
+    <td><img src="src/git/aito_bin.gif" width=159></td>
+    <td><img src="src/git/aito_limit.gif" width=159></td>
   </tr>
   <tr>
     <th>other</th>
-    <td><img src="src/git/exer_resize.gif" width=160></td>
-    <td><img src="src/git/exer_gray.gif" width=160></td>
-    <td><img src="src/git/exer_bin.gif" width=160></td>
-    <td><img src="src/git/exer_limit.gif" width=160></td>
+    <td><img src="src/git/exer_resize.gif" width=159></td>
+    <td><img src="src/git/exer_gray.gif" width=159></td>
+    <td><img src="src/git/exer_bin.gif" width=159></td>
+    <td><img src="src/git/exer_limit.gif" width=159></td>
   </tr>
 </table>
 then, you can get result of video prediction.
