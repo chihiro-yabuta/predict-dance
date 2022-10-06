@@ -26,6 +26,7 @@
   </tr>
 </table>
 then, you can get result of video prediction.
+
 ![flowchart](src/git/result.png)
 
 ## How do I start ?
