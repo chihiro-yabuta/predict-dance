@@ -20,7 +20,7 @@ class plot:
         s = 'test' if self.test else 'epoch_'+str(self.epoch)
         plt.close(self.fig)
         self.fig.savefig(f'out/img/{s}/estimate_{idx}')
-    
+
     def eachplot(self, nns):
         for ax, nn in zip(self.fig.axes, nns):
             for e in nn.transpose(0,1):

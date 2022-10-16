@@ -23,16 +23,16 @@ def all_read(dirname, force=False):
             teachs = teach if teachs.size == 0 else np.append(teachs, teach, axis=0)
             div = np.append(div, len(data)-arr_size)
         with open(f'out/model/{dirname}_read.pkl', 'wb') as f:
-            print('dumping '+ f'out/model/{dirname}_read.pkl')
+            print('all dumping '+ f'out/model/{dirname}_read.pkl')
             pickle.dump((data, teachs, div), f)
     with open(f'out/model/{dirname}_read.pkl', 'rb') as f:
-        print('loading '+ f'out/model/{dirname}_read.pkl')
+        print('all loading '+ f'out/model/{dirname}_read.pkl')
         return pickle.load(f)
 
 def test_read():
     if input('read video data [y/n]: ') == 'y':
         with open('out/model/video_read.pkl', 'rb') as f:
-            print('loading '+'out/model/video_read.pkl')
+            print('all loading '+'out/model/video_read.pkl')
             return pickle.load(f)
     else:
         return all_read('test')
