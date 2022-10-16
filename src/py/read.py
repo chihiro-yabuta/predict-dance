@@ -11,7 +11,7 @@ class Read:
     def read(self, filename):
         arr = np.array([])
         video = f'{self.dirname}/{filename}.mp4'
-        pkl = f'out/src/{filename}.pkl'
+        pkl = f'out/src/edited/{filename}.pkl'
 
         if self.force or not os.path.isfile(pkl):
             self.cap = cv2.VideoCapture(video)
