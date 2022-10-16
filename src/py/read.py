@@ -26,7 +26,7 @@ class Read:
             return pickle.load(f)
 
     def RGB2GRAY(self, name, arr):
-        print('dumping '+ f'{self.dirname}/{name}.mp4')
+        print('resizing and graying '+ f'{self.dirname}/{name}.mp4')
 
         w = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -42,7 +42,7 @@ class Read:
         return arr
 
     def GRAY2BIN(self, name, arr, rang=initial_rang):
-        print('editting '+ f'{self.dirname}/{name}.mp4')
+        print('binarying '+ f'{self.dirname}/{name}.mp4')
         edited = f'out/video/edited/{name}.mp4'
 
         fmt = cv2.VideoWriter_fourcc('m','p','4','v')
