@@ -42,8 +42,11 @@ plz check tree down below.
 ├── archive
 │   ├── *.mp4 (for stock)
 ├── out
-│   ├── edited
-│   │   ├── *.mp4
+│   ├── video
+│   │   ├── edited
+│   │   │   ├── *.mp4
+│   │   ├── removed
+│   │   │   ├── *.mp4
 │   ├── img (this directory is created automatically)
 │   │   ├── epoch_n
 │   │   │   ├── ...
