@@ -61,5 +61,5 @@ class Read:
                     rang = initial_rang
                     break
             arr[i], arr[i][target] = 0, arr[i][target]
-            writer.write(cv2.merge(arr[i]))
+            writer.write(arr[i])
         return arr
