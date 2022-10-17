@@ -1,8 +1,8 @@
 import cv2, os, pickle, numpy as np
 from tqdm import tqdm
 from rembg.bg import remove
-from .common import size
-from .read import initial_rang
+from ..src.py.common import size
+from ..src.py.read import initial_rang
 
 class Review:
     def __init__(self, dirname):
@@ -16,18 +16,14 @@ class Review:
             self.read(filename)
 
     def compare(self):
-        for filename in os.listdir(self.dirname):
-            filename = filename.replace('.mp4', '')
-            edited_pkl = f'out/src/edited/{filename}.pkl'
-            removed_pkl = f'out/src/removed/{filename}.pkl'
-
-            with open(edited_pkl, 'rb') as f:
+        for pkl in os.listdir('out/src/removed'):
+            with open('out/src/edited/'+pkl, 'rb') as f:
                 edited = pickle.load(f)
-            with open(removed_pkl, 'rb') as f:
+            with open('out/src/removed/'+pkl, 'rb') as f:
                 removed = pickle.load(f)
-            match = np.where((edited==255)&(removed==255),1,0).sum()
+            match = np.where((edited==255)&(removed==255),1,0).sum()/initial_rang
 
-            print(f'{filename}.mp4, edit=remove: {match*100/(initial_rang*len(edited))}%')
+            print(f'{pkl.replace(".pkl", "")} match deg: {match*100/len(edited)}%')
 
     def read(self, filename):
         arr = np.array([])
