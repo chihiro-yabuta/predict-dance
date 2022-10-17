@@ -42,6 +42,9 @@ plz check tree down below.
 ├── archive
 │   ├── *.mp4 (for stock)
 ├── out
+│   ├── video
+│   │   ├── edited
+│   │   │   ├── *.mp4
 │   ├── edited
 │   │   ├── *.mp4
 │   ├── img (this directory is created automatically)
@@ -50,7 +53,8 @@ plz check tree down below.
 │   ├── model
 │   │   ├── ...
 │   └── src
-│       ├── ...
+│   │   ├── edited
+│   │   │   ├── ...
 ├── src
 │   ├── py
 │   │   ├── __pycache__
