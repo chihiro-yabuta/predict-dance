@@ -1,10 +1,10 @@
 import cv2, os, pickle, numpy as np
 from tqdm import tqdm
 from rembg.bg import remove
-from ..src.py.common import size
-from ..src.py.read import initial_rang
+from .common import size
+from .read import initial_rang
 
-class Review:
+class Remove:
     def __init__(self, dirname):
         self.dirname = dirname
         self.size = (size, size)
@@ -12,7 +12,7 @@ class Review:
     def dump(self):
         for filename in os.listdir(self.dirname):
             filename = filename.replace('.mp4', '')
-            print('back removing '+ f'{self.dirname}/{filename}.mp4')
+            print('removing '+ f'{self.dirname}/{filename}.mp4')
             self.read(filename)
 
     def compare(self):
@@ -23,7 +23,7 @@ class Review:
                 removed = pickle.load(f)
             match = np.where((edited==255)&(removed==255),1,0).sum()/initial_rang
 
-            print(f'{pkl.replace(".pkl", "")} match deg: {match*100/len(edited)}%')
+            print(f'{pkl.replace(".pkl","")} percent: {match*100/len(edited):>0.2f}%')
 
     def read(self, filename):
         arr = np.array([])
@@ -48,7 +48,7 @@ class Review:
             frame = cv2.resize(remove(frame)[h_ma:h-h_ma, w_ma:w-w_ma], self.size)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             bin = np.where(gray == 0, 0, 255).astype(np.uint8)[np.newaxis,np.newaxis,:,:]
-            writer.write(cv2.merge(bin))
+            writer.write(cv2.merge(bin[0]))
             arr = bin if arr.size == 0 else np.append(arr, bin, axis=0)
 
         with open(pkl, 'wb') as f:

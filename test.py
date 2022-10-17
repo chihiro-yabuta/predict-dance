@@ -1,10 +1,7 @@
-import torch, torchinfo
-from src.py.network import NeuralNetwork
+import torch
 from src.py.study import Study
-from src.py.common import all_read, test_read, arr_size, size, batch
+from src.py.common import all_read, test_read
 from src.py.plot import plot
-print('Input Size:', batch, arr_size, 1, size, size)
-torchinfo.summary(NeuralNetwork(), (batch, arr_size, 1, size, size))
 
 if input('archive [y/n]: ') == 'y':
     r, i = all_read('archive'), 10000
