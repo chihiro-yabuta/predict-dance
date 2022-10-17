@@ -2,6 +2,7 @@ import cv2, os, pickle, numpy as np
 from tqdm import tqdm
 from rembg.bg import remove
 from .common import size
+from .read import initial_rang
 
 class Review:
     def __init__(self, dirname):
@@ -24,9 +25,9 @@ class Review:
                 edited = pickle.load(f)
             with open(removed_pkl, 'rb') as f:
                 removed = pickle.load(f)
-            match = sum(np.where(edited==255 & edited==removed, 1,0))/5
+            match = np.where((edited==255)&(removed==255),1,0).sum()
 
-            print(f'{self.dirname}/{filename}.mp4 match percent: {match}%')
+            print(f'{filename}.mp4, edit=remove: {match*100/(initial_rang*len(edited))}%')
 
     def read(self, filename):
         arr = np.array([])
@@ -50,8 +51,8 @@ class Review:
             _, frame = cap.read()
             frame = cv2.resize(remove(frame)[h_ma:h-h_ma, w_ma:w-w_ma], self.size)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            bin = np.where(gray == 0, 0, 255).astype(np.uint8)
-            writer.write(bin)
+            bin = np.where(gray == 0, 0, 255).astype(np.uint8)[np.newaxis,np.newaxis,:,:]
+            writer.write(cv2.merge(bin))
             arr = bin if arr.size == 0 else np.append(arr, bin, axis=0)
 
         with open(pkl, 'wb') as f:
