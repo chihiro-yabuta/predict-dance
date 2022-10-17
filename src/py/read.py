@@ -36,8 +36,7 @@ class Read:
         for _ in tqdm(range(self.frame_count)):
             _, frame = self.cap.read()
             frame = cv2.resize(frame[h_ma:h-h_ma, w_ma:w-w_ma], self.size)
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            gray = np.array([cv2.split(gray)])
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)[np.newaxis,np.newaxis,:,:]
             arr = gray if arr.size == 0 else np.append(arr, gray, axis=0)
         return arr
 
@@ -61,5 +60,5 @@ class Read:
                     rang = initial_rang
                     break
             arr[i], arr[i][target] = 0, arr[i][target]
-            writer.write(arr[i])
+            writer.write(cv2.merge(arr[i]))
         return arr
