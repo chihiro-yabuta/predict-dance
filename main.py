@@ -23,6 +23,6 @@ for idx in range(1, epochs+1):
     archive.test()
     if loss > archive.test_loss:
         print('Saving PyTorch Model State')
-        torch.save(model, 'out/model/model_weights.pth')
+        torch.save(model.state_dict(), 'out/model/model_weights.pth')
         loss = archive.test_loss
 print(f'final loss: {loss}')

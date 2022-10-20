@@ -59,9 +59,9 @@ class Remove:
 
 class Cam:
     def __init__(self, filename):
-        model = torch.load('out/model/model_weights.pth')
-        ownnet = NeuralNetwork()
-        target_layers = ownnet.convL
+        model = NeuralNetwork()
+        model.load_state_dict(torch.load('out/model/model_weights.pth'))
+        target_layers = model.convL
 
         with open(f'out/src/edited/{filename}.pkl', 'rb') as f:
             data = pickle.load(f)
