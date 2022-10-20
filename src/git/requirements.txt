@@ -2,6 +2,6 @@ torch
 numpy
 opencv-python
 matplotlib
-sympy
 tqdm
 torchinfo
+rembg

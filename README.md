@@ -45,8 +45,8 @@ plz check tree down below.
 │   ├── video
 │   │   ├── edited
 │   │   │   ├── *.mp4
-│   ├── edited
-│   │   ├── *.mp4
+│   │   ├── removed
+│   │   │   ├── *.mp4
 │   ├── img (this directory is created automatically)
 │   │   ├── epoch_n
 │   │   │   ├── ...
@@ -54,6 +54,8 @@ plz check tree down below.
 │   │   ├── ...
 │   └── src
 │   │   ├── edited
+│   │   │   ├── ...
+│   │   ├── removed
 │   │   │   ├── ...
 ├── src
 │   ├── py

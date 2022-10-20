@@ -42,7 +42,7 @@ class Read:
 
     def GRAY2BIN(self, name, arr, rang=initial_rang):
         print('binarying '+ f'{self.dirname}/{name}.mp4')
-        edited = f'out/edited/{name}.mp4'
+        edited = f'out/video/edited/{name}.mp4'
 
         fmt = cv2.VideoWriter_fourcc('m','p','4','v')
         writer = cv2.VideoWriter(edited, fmt, self.fps, self.size, 0)
