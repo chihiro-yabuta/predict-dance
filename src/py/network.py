@@ -16,7 +16,6 @@ class NeuralNetwork(nn.Module):
             nn.BatchNorm2d(thr_d),
             nn.ReLU(),
             nn.MaxPool2d(pool),
-            nn.Flatten(),
             nn.Dropout(0.5)
         ) for _ in range(batch)])
 
@@ -29,7 +28,6 @@ class NeuralNetwork(nn.Module):
         self.encoder = nn.TransformerEncoder(e, 2)
 
         self.stack = nn.Sequential(
-            nn.Flatten(),
             nn.Linear(out*arr_size, 1024),
             nn.ReLU(),
             nn.Linear(1024, 256),
@@ -46,7 +44,9 @@ class NeuralNetwork(nn.Module):
 
     def forward(self, x):
         self.c = torch.stack(list(map(lambda conv, e: conv(e), self.convL, x)))
+        self.c = torch.flatten(self.c, 2)
         em = self.pixel_embedding(pixel_idx).reshape(x.shape)
         self.em = torch.stack(list(map(lambda conv, e: conv(e), self.convL, em)))
+        self.em = torch.flatten(self.em, 2)
         self.e = self.encoder(self.em + self.c)
-        return self.stack(self.e)
+        return self.stack(torch.flatten(self.e, 1))

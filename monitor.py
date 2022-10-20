@@ -17,5 +17,5 @@ from src.py.analyze import Remove, Cam
 # Remove('').compare()
 
 # run cam
-a = Cam('aito_dance')
-# print(a.shape)
+cam = Cam('aito_dance')
+cam.dump()

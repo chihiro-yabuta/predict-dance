@@ -59,15 +59,20 @@ class Remove:
 
 class Cam:
     def __init__(self, filename):
-        model = NeuralNetwork()
-        model.load_state_dict(torch.load('out/model/model_weights.pth'))
-        target_layers = model.convL
+        self.filename = filename
+        self.model = NeuralNetwork()
+        self.model.load_state_dict(torch.load('out/model/model_weights.pth'))
+        self.target_layers = self.model.convL
 
-        with open(f'out/src/edited/{filename}.pkl', 'rb') as f:
+    def dump(self):
+        print(self.run(0).shape)
+
+    def run(self, flame):
+        with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             data = pickle.load(f)
-        idx = np.array(list(map(lambda e: np.arange(e, e+arr_size), range(batch))))
+        idx = np.array(list(map(lambda e: np.arange(flame, flame+arr_size), range(batch))))
         input_tensor = torch.Tensor(data[idx])
         targets = [ClassifierOutputTarget(lenA-1) for _ in range(batch)]
 
-        cam = GradCAM(model, target_layers)
+        cam = GradCAM(self.model, self.target_layers)
         return cam(input_tensor, targets)
