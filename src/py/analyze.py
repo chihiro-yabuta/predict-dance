@@ -1,8 +1,11 @@
-import cv2, os, pickle, numpy as np
+import cv2, os, pickle, numpy as np, torch
 from tqdm import tqdm
 from rembg.bg import remove
-from .common import size
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
+from .common import size, batch, arr_size, lenA
 from .read import initial_rang
+from .network import NeuralNetwork
 
 class Remove:
     def __init__(self, dirname):
@@ -53,3 +56,18 @@ class Remove:
 
         with open(pkl, 'wb') as f:
             pickle.dump(arr, f)
+
+class Cam:
+    def __init__(self, filename):
+        model = torch.load('out/model/model_weights.pth')
+        ownnet = NeuralNetwork()
+        target_layers = ownnet.convL
+
+        with open(f'out/src/edited/{filename}.pkl', 'rb') as f:
+            data = pickle.load(f)
+        idx = np.array(list(map(lambda e: np.arange(e, e+arr_size), range(batch))))
+        input_tensor = torch.Tensor(data[idx])
+        targets = [ClassifierOutputTarget(lenA-1) for _ in range(batch)]
+
+        cam = GradCAM(model, target_layers)
+        return cam(input_tensor, targets)

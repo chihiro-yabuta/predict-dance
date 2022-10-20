@@ -1,7 +1,7 @@
 import torchinfo
 from src.py.network import NeuralNetwork
 from src.py.common import all_read, arr_size, size, batch
-from src.py.analyze import Remove
+from src.py.analyze import Remove, Cam
 
 # show nn size
 # print('Input Size:', batch, arr_size, 1, size, size)
@@ -14,4 +14,8 @@ from src.py.analyze import Remove
 # dump rembg data
 # Remove('video').dump()
 # Remove('archive').dump()
-Remove('').compare()
+# Remove('').compare()
+
+# run cam
+a = Cam('aito_dance')
+# print(a.shape)

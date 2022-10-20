@@ -5,3 +5,4 @@ matplotlib
 tqdm
 torchinfo
 rembg
+grad-cam
