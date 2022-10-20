@@ -43,6 +43,8 @@ plz check tree down below.
 │   ├── *.mp4 (for stock)
 ├── out
 │   ├── video
+│   │   ├── cam
+│   │   │   ├── *.mp4
 │   │   ├── edited
 │   │   │   ├── *.mp4
 │   │   ├── removed

@@ -1,4 +1,5 @@
-import torchinfo
+import torch, torchinfo
+from pytorch_grad_cam import GradCAM
 from src.py.network import NeuralNetwork
 from src.py.common import all_read, arr_size, size, batch
 from src.py.analyze import Remove, Cam
@@ -17,5 +18,10 @@ from src.py.analyze import Remove, Cam
 # Remove('').compare()
 
 # run cam
-cam = Cam('aito_dance')
+model = NeuralNetwork()
+model.load_state_dict(torch.load('out/model/model_weights.pth'))
+target_layers = model.convL
+cam = GradCAM(model, target_layers)
+
+cam = Cam('aito_dance.mp4', cam)
 cam.dump()

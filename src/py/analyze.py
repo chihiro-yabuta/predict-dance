@@ -1,11 +1,9 @@
 import cv2, os, pickle, numpy as np, torch
 from tqdm import tqdm
 from rembg.bg import remove
-from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-from .common import size, batch, arr_size, lenA
+from .common import size, batch, arr_size
 from .read import initial_rang
-from .network import NeuralNetwork
 
 class Remove:
     def __init__(self, dirname):
@@ -58,21 +56,41 @@ class Remove:
             pickle.dump(arr, f)
 
 class Cam:
-    def __init__(self, filename):
-        self.filename = filename
-        self.model = NeuralNetwork()
-        self.model.load_state_dict(torch.load('out/model/model_weights.pth'))
-        self.target_layers = self.model.convL
+    def __init__(self, filename, cam, cl=None):
+        ansmap = { 'elegant': 0, 'dance': 1 }
+        self.filename = filename.replace('.mp4', '')
+        cl = cl if cl else ansmap.get(self.filename.split('_')[-1], 2)
+        self.targets = [ClassifierOutputTarget(cl) for _ in range(batch)]
+
+        with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
+            self.data = pickle.load(f)
+        self.cam = cam
 
     def dump(self):
-        print(self.run(0).shape)
+        print('grad cam '+ f'{self.filename}.mp4')
+        edited = f'out/video/edited/{self.filename}.mp4'
+        cam = f'out/video/cam/{self.filename}.mp4'
 
-    def run(self, flame):
-        with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
-            data = pickle.load(f)
-        idx = np.array(list(map(lambda e: np.arange(flame, flame+arr_size), range(batch))))
-        input_tensor = torch.Tensor(data[idx])
-        targets = [ClassifierOutputTarget(lenA-1) for _ in range(batch)]
+        cap = cv2.VideoCapture(edited)
+        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-        cam = GradCAM(self.model, self.target_layers)
-        return cam(input_tensor, targets)
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        fmt = cv2.VideoWriter_fourcc('m','p','4','v')
+        writer = cv2.VideoWriter(cam, fmt, fps, (size, size), 0)
+
+        imgs = np.zeros((frame_count, size, size))
+        for fr in tqdm(range(arr_size, frame_count)):
+            if fr < arr_size*2:
+                mean = fr-arr_size+1
+            elif frame_count-arr_size < fr:
+                mean = frame_count-fr
+            else:
+                mean = arr_size
+            img = self.run(fr)
+            imgs[fr-arr_size:fr] += img
+            writer.write((imgs[fr-arr_size]*255/mean).astype(np.uint8))
+
+    def run(self, fr):
+        idx = np.array(list(map(lambda _:np.arange(fr-arr_size,fr),range(batch))))
+        input_tensor = torch.Tensor(self.data[idx])
+        return self.cam(input_tensor, self.targets)
