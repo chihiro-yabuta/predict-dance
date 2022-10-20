@@ -66,7 +66,7 @@ class Cam:
             self.data = pickle.load(f)
         self.cam = cam
 
-    def dump(self):
+    def dump(self, r=0.9):
         print('grad cam '+ f'{self.filename}.mp4')
         edited = f'out/video/edited/{self.filename}.mp4'
         cam = f'out/video/cam/{self.filename}.mp4'
@@ -79,18 +79,21 @@ class Cam:
         writer = cv2.VideoWriter(cam, fmt, fps, (size, size), 0)
 
         imgs = np.zeros((frame_count, size, size))
-        for fr in tqdm(range(arr_size, frame_count)):
-            if fr < arr_size*2:
-                mean = fr-arr_size+1
-            elif frame_count-arr_size < fr:
-                mean = frame_count-fr
+        for fr in tqdm(range(frame_count)):
+            if frame_count-arr_size < fr+1:
+                mean = 1
             else:
-                mean = arr_size
-            img = self.run(fr)
-            imgs[fr-arr_size:fr] += img
-            writer.write((imgs[fr-arr_size]*255/mean).astype(np.uint8))
+                if fr+1 < arr_size:
+                    mean = fr+1
+                else:
+                    mean = arr_size
+                img = self.run(fr)
+                img = np.where(img < r, 0, img)
+                imgs[fr:fr+arr_size] += img
+
+            writer.write((imgs[fr]*255/mean).astype(np.uint8))
 
     def run(self, fr):
-        idx = np.array(list(map(lambda _:np.arange(fr-arr_size,fr),range(batch))))
+        idx = np.array(list(map(lambda _:np.arange(fr,fr+arr_size),range(batch))))
         input_tensor = torch.Tensor(self.data[idx])
         return self.cam(input_tensor, self.targets)
