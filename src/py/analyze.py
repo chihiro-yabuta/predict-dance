@@ -76,7 +76,7 @@ class Cam:
 
         fps = cap.get(cv2.CAP_PROP_FPS)
         fmt = cv2.VideoWriter_fourcc('m','p','4','v')
-        writer = cv2.VideoWriter(cam, fmt, fps, (size, size), 0)
+        writer = cv2.VideoWriter(cam, fmt, fps, (size*2, size), 0)
 
         imgs = np.zeros((frame_count, size, size))
         for fr in tqdm(range(frame_count)):
@@ -90,8 +90,9 @@ class Cam:
                 img = self.run(fr)
                 img = np.where(img < r, 0, img)
                 imgs[fr:fr+arr_size] += img
-
-            writer.write((imgs[fr]*255/mean).astype(np.uint8))
+                img = (imgs[fr]*255/mean).astype(np.uint8)
+                cat = np.append(img, self.data[fr][0], axis=1)
+            writer.write(cat)
 
     def run(self, fr):
         idx = np.array(list(map(lambda _:np.arange(fr,fr+arr_size),range(batch))))
