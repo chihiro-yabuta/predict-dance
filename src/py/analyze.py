@@ -56,7 +56,7 @@ class Remove:
             pickle.dump(arr, f)
 
 class Cam:
-    def __init__(self, filename, cam, cl=None):
+    def __init__(self, filename, cam_model, cl=None):
         ansmap = { 'elegant': 0, 'dance': 1 }
         self.filename = filename.replace('.mp4', '')
         cl = cl if cl else ansmap.get(self.filename.split('_')[-1], 2)
@@ -64,7 +64,7 @@ class Cam:
 
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
-        self.cam = cam
+        self.cam_model = cam_model
 
     def dump(self, r=0.9):
         print('grad cam '+ f'{self.filename}.mp4')
@@ -96,4 +96,4 @@ class Cam:
     def run(self, fr):
         idx = np.array(list(map(lambda _:np.arange(fr,fr+arr_size),range(batch))))
         input_tensor = torch.Tensor(self.data[idx])
-        return self.cam(input_tensor, self.targets)
+        return self.cam_model(input_tensor, self.targets)

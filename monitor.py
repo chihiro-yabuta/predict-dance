@@ -21,8 +21,8 @@ from src.py.analyze import Remove, Cam
 model = NeuralNetwork()
 model.load_state_dict(torch.load('out/model/model_weights.pth'))
 target_layers = model.convL
-model_cam = GradCAM(model, target_layers)
+cam_model = GradCAM(model, target_layers)
 
 for s in os.listdir('out/video/edited'):
-    cam = Cam(s, model_cam)
+    cam = Cam(s, cam_model)
     cam.dump()

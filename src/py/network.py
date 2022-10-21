@@ -7,6 +7,11 @@ class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
 
+        self.dropout = nn.Sequential(
+            nn.Flatten(2),
+            nn.Dropout()
+        )
+
         self.convL = nn.ModuleList([nn.Sequential(
             nn.Conv2d(1, sec_d, sec_size, sec_size),
             nn.BatchNorm2d(sec_d),
@@ -15,14 +20,10 @@ class NeuralNetwork(nn.Module):
             nn.Conv2d(sec_d, thr_d, thr_size, thr_size),
             nn.BatchNorm2d(thr_d),
             nn.ReLU(),
-            nn.MaxPool2d(pool),
-            nn.Dropout(0.5)
+            nn.MaxPool2d(pool)
         ) for _ in range(batch)])
 
-        self.pixel_embedding = nn.Sequential(
-            nn.Embedding(lenE, 1),
-            nn.Dropout(0.5)
-        )
+        self.pixel_embedding = nn.Embedding(lenE, 1)
 
         e = nn.TransformerEncoderLayer(out, 2, batch_first=True)
         self.encoder = nn.TransformerEncoder(e, 2)
@@ -44,9 +45,9 @@ class NeuralNetwork(nn.Module):
 
     def forward(self, x):
         self.c = torch.stack(list(map(lambda conv, e: conv(e), self.convL, x)))
-        self.c = torch.flatten(self.c, 2)
+        self.c = self.dropout(self.c)
         em = self.pixel_embedding(pixel_idx).reshape(x.shape)
         self.em = torch.stack(list(map(lambda conv, e: conv(e), self.convL, em)))
-        self.em = torch.flatten(self.em, 2)
+        self.em = self.dropout(self.em)
         self.e = self.encoder(self.em + self.c)
         return self.stack(torch.flatten(self.e, 1))
