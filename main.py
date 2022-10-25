@@ -12,6 +12,7 @@ loss = 1
 epochs = 10
 shutil.rmtree('out/img', ignore_errors=True)
 os.mkdir('out/img')
+os.mkdir('out/img/loss')
 os.mkdir('out/img/test')
 for idx in range(1, epochs+1):
     print(f'Epoch {idx}\n-------------------------------')

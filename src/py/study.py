@@ -11,7 +11,7 @@ class Study:
         self.diff = np.array([len(self.teach)-diff, diff])/batch
 
     def train(self):
-        self.p.test, d = False, int(self.diff[0])
+        l, self.p.test, d = [], False, int(self.diff[0])
         print('train')
 
         self.model.train()
@@ -20,6 +20,7 @@ class Study:
 
             pred = self.model(train)
             loss = self.loss_fn(pred, teach)
+            l.append(loss.item())
 
             self.optimizer.zero_grad()
             loss.backward()
@@ -27,6 +28,7 @@ class Study:
 
             if (i % (3000/batch) == 0 or i == 1) and self.p.execute:
                 self.p.saveimg(self.model, teach, i)
+        self.p.saveloss(l)
 
     def test(self):
         self.p.test, d = True, int(self.diff[1])

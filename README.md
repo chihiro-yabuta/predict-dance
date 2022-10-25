@@ -50,8 +50,7 @@ plz check tree down below.
 │   │   ├── removed
 │   │   │   ├── *.mp4
 │   ├── img (this directory is created automatically)
-│   │   ├── epoch_n
-│   │   │   ├── ...
+│   │   ├── ...
 │   ├── model
 │   │   ├── ...
 │   └── src

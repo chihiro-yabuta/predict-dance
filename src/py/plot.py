@@ -6,6 +6,12 @@ class plot:
         self.test = False
         self.execute = execute
 
+    def saveloss(self, loss):
+        fig = plt.figure(figsize=(20, 4), tight_layout=True)
+        ax = fig.add_subplot(1, 1, 1)
+        ax.plot(loss)
+        fig.savefig(f'out/img/loss/epoch_{str(self.epoch)}')
+
     def saveimg(self, m, ans, idx):
         conv, em, enc = map(lambda l: l[0].detach().clone(), (m.c,m.em,m.e))
         self.fig = plt.figure(figsize=(16, 4), tight_layout=True)
