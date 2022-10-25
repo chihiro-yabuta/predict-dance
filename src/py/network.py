@@ -1,16 +1,11 @@
 import torch
-from torch import nn
+from torch import nn, stack, flatten
 from .common import *
 pixel_idx = torch.arange(0,lenE).repeat(batch*arr_size)
 
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
-
-        self.dropout = nn.Sequential(
-            nn.Flatten(2),
-            nn.Dropout()
-        )
 
         self.convL = nn.ModuleList([nn.Sequential(
             nn.Conv2d(1, sec_d, sec_size, sec_size),
@@ -35,19 +30,18 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(256, 32),
             nn.Tanh(),
-            nn.Dropout(0.2),
             nn.Linear(32, 8),
             nn.Tanh(),
-            nn.Dropout(0.1),
             nn.Linear(8, lenA),
             nn.Softmax(1)
         )
 
     def forward(self, x):
-        self.c = torch.stack(list(map(lambda conv, e: conv(e), self.convL, x)))
-        self.c = self.dropout(self.c)
+        self.c = self.li(map(lambda conv, e: conv(e), self.convL, x))
         em = self.pixel_embedding(pixel_idx).reshape(x.shape)
-        self.em = torch.stack(list(map(lambda conv, e: conv(e), self.convL, em)))
-        self.em = self.dropout(self.em)
+        self.em = self.li(map(lambda conv, e: conv(e), self.convL, em))
         self.e = self.encoder(self.em + self.c)
-        return self.stack(torch.flatten(self.e, 1))
+        return self.stack(flatten(self.e, 1))
+
+    def li(self, m):
+        return flatten(stack(list(m)), 2)
