@@ -4,8 +4,8 @@ from .common import arr_size, lenA, batch
 
 class Study:
     def __init__(self, model, read, diff, p):
-        self.loss_fn = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.Adam(model.parameters(),lr=1e-4)
+        self.loss_fn = torch.nn.SmoothL1Loss()
+        self.optimizer = torch.optim.RAdam(model.parameters(),lr=1e-4)
         self.model, self.p = model, p
         self.data, self.teach, self.div = read
         self.diff = np.array([len(self.teach)-diff, diff])/batch

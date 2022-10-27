@@ -15,12 +15,13 @@ class NeuralNetwork(nn.Module):
             nn.Conv2d(sec_d, thr_d, thr_size, thr_size),
             nn.BatchNorm2d(thr_d),
             nn.ReLU(),
-            nn.MaxPool2d(pool)
+            nn.MaxPool2d(pool),
+            nn.Dropout()
         ) for _ in range(batch)])
 
         self.pixel_embedding = nn.Embedding(lenE, 1)
 
-        e = nn.TransformerEncoderLayer(out, 2, batch_first=True)
+        e = nn.TransformerEncoderLayer(out,2,dropout=0.8,batch_first=True)
         self.encoder = nn.TransformerEncoder(e, 2)
 
         self.stack = nn.Sequential(
@@ -30,6 +31,7 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(256, 32),
             nn.Tanh(),
+            nn.Dropout(),
             nn.Linear(32, 8),
             nn.Tanh(),
             nn.Linear(8, lenA),
