@@ -56,7 +56,7 @@ class Remove:
             pickle.dump(arr, f)
 
 class Cam:
-    def __init__(self, filename, cam_model, cl=None):
+    def __init__(self, filename, cam, em, cl=None):
         ansmap = { 'elegant': 0, 'dance': 1 }
         self.filename = filename.replace('.mp4', '')
         cl = cl if cl else ansmap.get(self.filename.split('_')[-1], 2)
@@ -64,9 +64,9 @@ class Cam:
 
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
-        self.cam_model = cam_model
+        self.cam, self.em = cam, em
 
-    def dump(self, r=0.9):
+    def dump(self, r=0.5):
         print('grad cam '+ f'{self.filename}.mp4')
         edited = f'out/video/edited/{self.filename}.mp4'
         cam = f'out/video/cam/{self.filename}.mp4'
@@ -81,20 +81,20 @@ class Cam:
         imgs = np.zeros((frame_count, size, size))
         for fr in tqdm(range(frame_count)):
             if frame_count-arr_size < fr+1:
-                mean = 1
+                mean = frame_count-fr
             else:
                 if fr+1 < arr_size:
                     mean = fr+1
                 else:
                     mean = arr_size
-                img = self.run(fr)
-                img = np.where(img < r, 0, img)
-                imgs[fr:fr+arr_size] += img
-                img = (imgs[fr]*255/mean).astype(np.uint8)
-                cat = np.append(img, self.data[fr][0], axis=1)
-            writer.write(cat)
+                imgs[fr:fr+arr_size] += self.run(fr)/2
+            img = np.where(imgs[fr]/mean < r, 0, imgs[fr]*255/mean)
+            cat = np.append(img, self.data[fr][0], axis=1)
+            writer.write(cat.astype(np.uint8))
 
     def run(self, fr):
-        idx = np.array(list(map(lambda _:np.arange(fr,fr+arr_size),range(batch))))
+        idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
         input_tensor = torch.Tensor(self.data[idx])
-        return self.cam_model(input_tensor, self.targets)
+        conv = self.cam(input_tensor, self.targets)
+        em = self.cam(self.em, self.targets)
+        return conv + em
