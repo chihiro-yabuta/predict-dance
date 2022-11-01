@@ -1,6 +1,7 @@
 import os, torch, torchinfo
+from pytorch_grad_cam import GradCAM
 from src.py.network import NeuralNetwork
-from src.py.common import all_read, arr_size, size, batch
+from src.py.common import all_read, arr_size, size, batch, thr_d, el
 from src.py.analyze import Remove, Cam
 
 # show nn size
@@ -17,6 +18,14 @@ from src.py.analyze import Remove, Cam
 # Remove('').compare()
 
 # run cam
+model = NeuralNetwork()
+model.load_state_dict(torch.load('out/model/model_weights.pth'))
+enc = model.encoder.layers
+
+def reshape_transform(tensor):
+    return tensor.transpose(0,1).reshape((arr_size,batch,thr_d,el))
+cam_model = GradCAM(model, enc, reshape_transform=reshape_transform)
+
 for s in os.listdir('out/video/edited'):
-    cam = Cam(s)
+    cam = Cam(s, cam_model)
     cam.dump()
