@@ -2,7 +2,9 @@ import cv2, os, pickle, numpy as np, torch
 from tqdm import tqdm
 from rembg.bg import remove
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-from .common import size, batch, arr_size
+from pytorch_grad_cam import GradCAM
+from src.py.network import NeuralNetwork
+from .common import size, batch, arr_size, el, thr_d
 from .read import initial_rang
 
 class Remove:
@@ -55,8 +57,16 @@ class Remove:
         with open(pkl, 'wb') as f:
             pickle.dump(arr, f)
 
+model = NeuralNetwork()
+model.load_state_dict(torch.load('out/model/model_weights.pth'))
+enc = model.encoder.layers
+
+def reshape_transform(tensor):
+    return tensor.transpose(0,1).reshape((arr_size,batch,thr_d,el))
+cam_model = GradCAM(model, enc, reshape_transform=reshape_transform)
+
 class Cam:
-    def __init__(self, filename, cam, em, cl=None):
+    def __init__(self, filename, cl=None):
         ansmap = { 'elegant': 0, 'dance': 1 }
         self.filename = filename.replace('.mp4', '')
         cl = cl if cl else ansmap.get(self.filename.split('_')[-1], 2)
@@ -64,9 +74,8 @@ class Cam:
 
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
-        self.cam, self.em = cam, em
 
-    def dump(self, r=0.5):
+    def dump(self, r=0.4):
         print('grad cam '+ f'{self.filename}.mp4')
         edited = f'out/video/edited/{self.filename}.mp4'
         cam = f'out/video/cam/{self.filename}.mp4'
@@ -87,7 +96,7 @@ class Cam:
                     mean = fr+1
                 else:
                     mean = arr_size
-                imgs[fr:fr+arr_size] += self.run(fr)/2
+                imgs[fr:fr+arr_size] += self.run(fr)
             img = np.where(imgs[fr]/mean < r, 0, imgs[fr]*255/mean)
             cat = np.append(img, self.data[fr][0], axis=1)
             writer.write(cat.astype(np.uint8))
@@ -95,6 +104,6 @@ class Cam:
     def run(self, fr):
         idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
         input_tensor = torch.Tensor(self.data[idx])
-        conv = self.cam(input_tensor, self.targets)
-        em = self.cam(self.em, self.targets)
-        return conv + em
+        res = cam_model(input_tensor, self.targets)
+        res = torch.tanh(torch.from_numpy(res)).numpy()
+        return res
