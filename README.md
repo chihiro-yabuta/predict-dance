@@ -30,13 +30,16 @@ then, you can get result of video prediction.
 ![flowchart](src/git/result.png)
 
 ## How do I start ?
-first of all, you need to install **dependencies**.<br>
-you should type this command.
+you can start to type default Makefile command.
 ```
-pip install -r src/git/requirements.txt
+make
 ```
-next, you need to create directories.<br>
-plz check tree down below.
+I have already prepared commands.<br>
+plz check Makefile.<br>
+you can develop in docker container as well.<br>
+
+when you finish to load, you probably can see directories.<br>
+I show you tree to understand easily.
 <pre>
 .
 ├── archive
@@ -54,22 +57,23 @@ plz check tree down below.
 │   ├── img (this directory is created automatically)
 │   │   ├── ...
 │   ├── model
-│   │   ├── ...
+│   │   ├── *.pkl
 │   └── src
 │   │   ├── edited
-│   │   │   ├── ...
+│   │   │   ├── *.pkl
 │   │   ├── removed
-│   │   │   ├── ...
+│   │   │   ├── *.pkl
 ├── src
-│   ├── py
-│   │   ├── __pycache__
-│   │   │   ├── *.pyc
+│   ├── ...
 ├── test
 │   ├── *.mp4 (for test)
 └── video
     ├── *.mp4 (for prediction)
 </pre>
-Finally, you checkout branches.<br>
+you can prepare data to predict to type this command.
+```
+make dump
+```
 if you type these command, you can execute prediction.
 ```
 python main.py
