@@ -25,12 +25,13 @@
     <td><img src="src/git/exer_limit.gif" width=159></td>
   </tr>
 </table>
-then, you can get result of video prediction.
+you will get result of video prediction.
 
 ![flowchart](src/git/result.png)
 
 ## How do I start ?
-you can start to type default Makefile command.
+plz install docker desktop first.
+after that, you can start to type default Makefile command.
 ```
 make
 ```
@@ -74,7 +75,7 @@ you can prepare data to predict to type this command.
 ```
 make dump
 ```
-if you type these command, you can execute prediction.
+you can execute prediction to type these commands.
 ```
 python main.py
 ```

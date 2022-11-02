@@ -6,15 +6,15 @@ from src.py.analyze import Flow, Remove, Cam
 
 args = sys.argv[1]
 
-if args=='show':
+if args == 'show':
     print('Input Size:', batch, arr_size, 1, size, size)
     torchinfo.summary(NeuralNetwork(), (batch, arr_size, 1, size, size))
 
-if args=='dump':
+if args == 'dump':
     all_read('video', True)
     all_read('archive', True)
 
-if args=='flow':
+if args == 'flow':
     model = NeuralNetwork()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
 
@@ -22,12 +22,12 @@ if args=='flow':
         flow = Flow(s, model)
         flow.read()
 
-if args=='remove':
+if args == 'remove':
     Remove('video').dump()
     Remove('archive').dump()
     Remove('').compare()
 
-if args=='cam':
+if args == 'cam':
     model = NeuralNetwork()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
     enc = model.encoder.layers
