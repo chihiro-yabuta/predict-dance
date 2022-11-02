@@ -1,0 +1,12 @@
+version: '3'
+services:
+  python3:
+    build:
+      context: .
+      dockerfile: 'src/git/Dockerfile'
+    container_name: 'predict-dance'
+    tty: true
+    restart: always
+    volumes:
+      - ./:/predict-dance
+    working_dir: '/predict-dance'

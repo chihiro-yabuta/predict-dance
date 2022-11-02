@@ -1,39 +1,41 @@
-import os, torch, torchinfo
+import sys, os, torch, torchinfo
 from pytorch_grad_cam import GradCAM
 from src.py.network import NeuralNetwork
 from src.py.common import all_read, arr_size, size, batch, thr_d, el
 from src.py.analyze import Flow, Remove, Cam
 
-# show nn size
-# print('Input Size:', batch, arr_size, 1, size, size)
-# torchinfo.summary(NeuralNetwork(), (batch, arr_size, 1, size, size))
+args = sys.argv[1]
 
-# dump pred data
-# all_read('video', True)
-# all_read('archive', True)
+if args=='show':
+    print('Input Size:', batch, arr_size, 1, size, size)
+    torchinfo.summary(NeuralNetwork(), (batch, arr_size, 1, size, size))
 
-# view flow
-model = NeuralNetwork()
-model.load_state_dict(torch.load('out/model/model_weights.pth'))
+if args=='dump':
+    all_read('video', True)
+    all_read('archive', True)
 
-for s in os.listdir('test'):
-    flow = Flow(s, model)
-    flow.read()
+if args=='flow':
+    model = NeuralNetwork()
+    model.load_state_dict(torch.load('out/model/model_weights.pth'))
 
-# dump rembg data
-# Remove('video').dump()
-# Remove('archive').dump()
-# Remove('').compare()
+    for s in os.listdir('out/video/edited'):
+        flow = Flow(s, model)
+        flow.read()
 
-# run cam
-# model = NeuralNetwork()
-# model.load_state_dict(torch.load('out/model/model_weights.pth'))
-# enc = model.encoder.layers
+if args=='remove':
+    Remove('video').dump()
+    Remove('archive').dump()
+    Remove('').compare()
 
-# def reshape_transform(tensor):
-#     return tensor.transpose(0,1).reshape((arr_size,batch,thr_d,el))
-# cam_model = GradCAM(model, enc, reshape_transform=reshape_transform)
+if args=='cam':
+    model = NeuralNetwork()
+    model.load_state_dict(torch.load('out/model/model_weights.pth'))
+    enc = model.encoder.layers
 
-# for s in os.listdir('out/video/edited'):
-#     cam = Cam(s, cam_model)
-#     cam.dump()
+    def reshape_transform(tensor):
+        return tensor.transpose(0,1).reshape((arr_size,batch,thr_d,el))
+    cam_model = GradCAM(model, enc, reshape_transform=reshape_transform)
+
+    for s in os.listdir('out/video/edited'):
+        cam = Cam(s, cam_model)
+        cam.dump()

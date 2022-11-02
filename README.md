@@ -1,5 +1,5 @@
-## What is predict_dance ?
-***predict_dance*** is enable to decide which videos belong to ***[elegant, dance, other]***.
+## What is predict-dance ?
+***predict-dance*** is enable to decide which videos belong to ***[elegant, dance, other]***.
 
 <table>
   <tr><th>\</th><th>resize</th><th>gray</th><th>binary</th><th>limit</th></tr>
