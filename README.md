@@ -41,6 +41,8 @@ plz check tree down below.
 .
 ├── archive
 │   ├── *.mp4 (for stock)
+├── flow
+│   ├── *.png (for visible dist)
 ├── out
 │   ├── video
 │   │   ├── cam

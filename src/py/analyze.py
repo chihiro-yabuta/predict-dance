@@ -1,9 +1,45 @@
-import cv2, os, pickle, numpy as np, torch
+import cv2, os, pickle, numpy as np, torch, matplotlib.pyplot as plt
 from tqdm import tqdm
 from rembg.bg import remove
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from .common import size, batch, arr_size
 from .read import initial_rang
+
+class Flow:
+    def __init__(self, filename, model):
+        self.filename = filename.replace('.mp4', '')
+        with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
+            self.data = pickle.load(f)
+        self.frame, self.model = len(self.data), model
+
+    def read(self):
+        arr = np.array([])
+        for fr in tqdm(range(self.frame-arr_size)):
+            res = self.forward(fr)
+            arr = res if arr.size == 0 else np.append(arr, res, axis=0)
+        self.plot(arr)
+
+    def forward(self, fr):
+        idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
+        input_tensor = torch.Tensor(self.data[idx])
+        res = self.model(input_tensor).mean(0).detach().numpy()[np.newaxis,:]
+        return res
+
+    def plot(self, arr):
+        fig = plt.figure(figsize=(24, 12), tight_layout=True)
+        ax1 = fig.add_subplot(3, 1, 1)
+        ax2 = fig.add_subplot(3, 1, 2)
+        ax3 = fig.add_subplot(3, 1, 3)
+        ax1.set_ylim(0, 1)
+        ax2.set_ylim(0, 1)
+        ax3.set_ylim(0, 1)
+        ax1.set_title('elegant')
+        ax2.set_title('dance')
+        ax3.set_title('other')
+        ax1.plot(arr[:, 0])
+        ax2.plot(arr[:, 1])
+        ax3.plot(arr[:, 2])
+        fig.savefig(f'flow/{self.filename}.png')
 
 class Remove:
     def __init__(self, dirname):
