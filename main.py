@@ -22,7 +22,7 @@ for idx in range(1, epochs+1):
     study.train()
     study.test()
     archive.test()
-    if loss > archive.test_loss:
+    if loss > archive.test_loss and study.co > 0.95:
         print('Saving PyTorch Model State')
         torch.save(model.state_dict(), 'out/model/model_weights.pth')
         loss = archive.test_loss

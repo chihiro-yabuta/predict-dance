@@ -4,7 +4,7 @@ from .common import arr_size, lenA, batch
 
 class Study:
     def __init__(self, model, read, diff, p):
-        self.loss_fn = torch.nn.SmoothL1Loss()
+        self.loss_fn = torch.nn.HuberLoss()
         self.optimizer = torch.optim.RAdam(model.parameters(),lr=1e-4)
         self.model, self.p = model, p
         self.data, self.teach, self.div = read
@@ -32,7 +32,7 @@ class Study:
 
     def test(self):
         self.p.test, d = True, int(self.diff[1])
-        self.test_loss, co = 0, 0
+        self.test_loss, self.co = 0, 0
         psum, ans = [torch.zeros(lenA) for _ in range(2)]
         print('test')
 
@@ -45,13 +45,13 @@ class Study:
                 self.test_loss += self.loss_fn(pred, teach).item()
 
                 for m, t in zip(pred.argmax(dim=1), teach):
-                    co, psum[m], ans = co+t[m], psum[m]+1, ans+t
+                    self.co, psum[m], ans = self.co+t[m], psum[m]+1, ans+t
 
                 if (i % (1000/batch) == 0 or i == 1) and self.p.execute:
                     self.p.saveimg(self.model, teach, i)
 
-            self.test_loss, co = self.test_loss/d, co/d/batch
-            print(f'Accuracy: {(100*co):>0.1f}%, Avg loss: {self.test_loss:>8f}')
+            self.test_loss, self.co = self.test_loss/d, self.co/d/batch
+            print(f'Accuracy: {(100*self.co):>0.1f}%, Avg loss: {self.test_loss:>8f}')
             print(f'Sum: {list(map(int, psum))}, Ans: {list(map(int, ans))}')
 
     def create_randrange(self):
