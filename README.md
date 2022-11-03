@@ -30,7 +30,7 @@ you will get result of video prediction.
 ![flowchart](src/git/result.png)
 
 ## How do I start ?
-plz install docker desktop first.
+plz install docker desktop first.<br>
 after that, you can start to type default Makefile command.
 ```
 make

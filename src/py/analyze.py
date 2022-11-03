@@ -13,6 +13,7 @@ class Flow:
         self.frame, self.model = len(self.data), model
 
     def read(self):
+        print('flow '+ f'{self.filename}.mp4')
         arr = np.array([])
         for fr in tqdm(range(self.frame-arr_size)):
             res = self.forward(fr)

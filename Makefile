@@ -3,7 +3,7 @@ CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 sc = "https://drive.google.com/uc?export=download&id=${FILE_ID}"
 Lb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${FILE_ID}"
 
-.PHONY: zip, clean, down, show, dump, flow, remove, cam
+.PHONY: zip, clean, down, sw, dp, fw, rm, cm
 
 default:
 	docker compose up -d
@@ -24,13 +24,13 @@ down:
 	docker compose down
 	docker system prune -a
 
-show:
+sw:
 	python monitor.py show
-dump:
+dp:
 	python monitor.py dump
-flow:
+fw:
 	python monitor.py flow
-remove:
+rm:
 	python monitor.py remove
-cam:
+cm:
 	python monitor.py cam
