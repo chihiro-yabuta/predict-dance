@@ -3,7 +3,7 @@ CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 sc = "https://drive.google.com/uc?export=download&id=${FILE_ID}"
 Lb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${FILE_ID}"
 
-.PHONY: zip, clean, down, sw, dp, fw, rm, cm
+.PHONY: zip, clean, down, run, view, a, sw, dp, fw, rm, cm
 
 default:
 	docker compose up -d
@@ -14,7 +14,7 @@ default:
 	rm -f -R __MACOSX data data.zip
 	mkdir flow out test
 	mkdir out/video out/video/cam out/video/edited out/video/removed
-	mkdir out/model out/src out/src/edited out/src/removed
+	mkdir out/img out/model out/src out/src/edited out/src/removed
 zip:
 	curl -sc /tmp/cookie ${sc} > /dev/null
 	curl -Lb /tmp/cookie ${Lb} -o data.zip
@@ -24,6 +24,16 @@ down:
 	docker compose down
 	docker system prune -a
 
+run:
+	python main.py
+	make fw
+view:
+	make a -J
+
+a:
+	make fw
+	make rm
+	make cm
 sw:
 	python monitor.py show
 dp:

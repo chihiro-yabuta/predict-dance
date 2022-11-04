@@ -1,4 +1,4 @@
-import sys, os, torch, torchinfo
+import sys, os, shutil, torch, torchinfo
 from pytorch_grad_cam import GradCAM
 from src.py.network import NeuralNetwork
 from src.py.common import all_read, arr_size, size, batch, thr_d, el
@@ -17,6 +17,8 @@ if args == 'dump':
 if args == 'flow':
     model = NeuralNetwork()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
+    shutil.rmtree('flow', ignore_errors=True)
+    os.mkdir('flow')
 
     for s in os.listdir('out/video/edited'):
         flow = Flow(s, model)

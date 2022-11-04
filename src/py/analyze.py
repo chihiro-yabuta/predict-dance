@@ -8,17 +8,21 @@ from .read import initial_rang
 class Flow:
     def __init__(self, filename, model):
         self.filename = filename.replace('.mp4', '')
+        os.mkdir(f'flow/{self.filename}')
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
         self.frame, self.model = len(self.data), model
 
     def read(self):
         print('flow '+ f'{self.filename}.mp4')
-        arr = np.array([])
+        x, arr, n = 500, np.array([]), 0
         for fr in tqdm(range(self.frame-arr_size)):
             res = self.forward(fr)
             arr = res if arr.size == 0 else np.append(arr, res, axis=0)
-        self.plot(arr)
+        for i in range(len(arr)//x+1):
+            d = arr[i*x:(i+1)*x]
+            n += len(d)
+            self.plot(d, n)
 
     def forward(self, fr):
         idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
@@ -26,7 +30,7 @@ class Flow:
         res = self.model(input_tensor).mean(0).detach().numpy()[np.newaxis,:]
         return res
 
-    def plot(self, arr):
+    def plot(self, arr, n):
         fig = plt.figure(figsize=(24, 12), tight_layout=True)
         ax1 = fig.add_subplot(3, 1, 1)
         ax2 = fig.add_subplot(3, 1, 2)
@@ -40,7 +44,8 @@ class Flow:
         ax1.plot(arr[:, 0])
         ax2.plot(arr[:, 1])
         ax3.plot(arr[:, 2])
-        fig.savefig(f'flow/{self.filename}.png')
+        plt.close(fig)
+        fig.savefig(f'flow/{self.filename}/{self.filename}_{n}.png')
 
 class Remove:
     def __init__(self, dirname):
