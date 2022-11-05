@@ -3,7 +3,7 @@ CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 sc = "https://drive.google.com/uc?export=download&id=${FILE_ID}"
 Lb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${FILE_ID}"
 
-.PHONY: zip, clean, down, run, view, a, sw, dp, fw, rm, cm
+.PHONY: zip, clean, down, setup, run, view, a, sw, dp, fw, rm, cm
 
 default:
 	docker compose up -d
@@ -24,6 +24,13 @@ down:
 	docker compose down
 	docker system prune -a
 
+setup:
+	code --install-extension ms-vscode-remote.remote-containers
+	code --install-extension ms-azuretools.vscode-docker
+	code --install-extension ms-python.python
+	code --install-extension ms-python.vscode-pylance
+	code --install-extension shardulm94.trailing-spaces
+	make dp
 run:
 	python main.py
 	make fw

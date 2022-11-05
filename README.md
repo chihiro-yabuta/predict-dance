@@ -73,7 +73,7 @@ I show you tree to understand easily.
 </pre>
 you can prepare data to predict to type this command.
 ```
-make dump
+make dp
 ```
 you can execute prediction to type these commands.
 ```
