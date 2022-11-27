@@ -1,7 +1,8 @@
-FILE_ID ?= "188JVmh_h903YI0FR7mgAKU2MVosFMjaD"
+data ?= "188JVmh_h903YI0FR7mgAKU2MVosFMjaD"
+json ?= "1MyPnhayeU9Zi6Mlh8LOLg8nlfAhhy2aB"
 CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
-sc = "https://drive.google.com/uc?export=download&id=${FILE_ID}"
-Lb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${FILE_ID}"
+dLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${data}"
+jLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${json}"
 
 .PHONY: zip, clean, down, setup, run, view, a, sw, dp, fw, rm, cm
 
@@ -9,17 +10,18 @@ default:
 	docker compose up -d
 	make zip
 	unzip data.zip
+	unzip json.zip
 	cp -r data/video ./
 	cp -r data/archive ./
-	rm -f -R __MACOSX data data.zip
+	rm -f -R __MACOSX data data.zip json.zip
 	mkdir flow out test
 	mkdir out/video out/video/cam out/video/edited out/video/removed
 	mkdir out/img out/model out/src out/src/edited out/src/removed
 zip:
-	curl -sc /tmp/cookie ${sc} > /dev/null
-	curl -Lb /tmp/cookie ${Lb} -o data.zip
+	curl -Lb /tmp/cookie ${dLb} -o data.zip
+	curl -Lb /tmp/cookie ${jLb} -o json.zip
 clean:
-	rm -f -R __MACOSX data data.zip archive video flow out test
+	rm -f -R __MACOSX data data.zip json json.zip archive video flow out test
 down:
 	docker compose down
 	docker system prune -a
@@ -35,7 +37,7 @@ run:
 	python main.py
 	make fw
 view:
-	make a -J
+	make a
 
 a:
 	make fw
