@@ -2,7 +2,7 @@ import sys, os, shutil, torch, torchinfo
 from pytorch_grad_cam import GradCAM
 from src.py.network import NeuralNetwork
 from src.py.common import all_read, arr_size, size, batch, thr_d, el
-from src.py.analyze import Flow, Remove, Cam
+from src.py.analyze import Dist, Json, Remove, Cam
 
 args = sys.argv[1]
 
@@ -14,15 +14,28 @@ if args == 'dump':
     all_read('video', True)
     all_read('archive', True)
 
-if args == 'flow':
+if args == 'dist':
     model = NeuralNetwork()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
-    shutil.rmtree('flow', ignore_errors=True)
-    os.mkdir('flow')
+    shutil.rmtree('flow/dist', ignore_errors=True)
+    os.mkdir('flow/dist')
 
     for s in os.listdir('out/video/edited'):
-        flow = Flow(s, model)
-        flow.read()
+        dist = Dist(s, model)
+        dist.read()
+
+if args == 'json':
+    irang = {
+        'thai_elegant.mp4': [840, 930],
+    }
+
+    for s in os.listdir('test'):
+        try:
+            rang = irang[s]
+        except:
+            rang = [int(input('start frame: ')), int(input('end frame: '))]
+        dist = Json(s, rang)
+        dist.read()
 
 if args == 'remove':
     Remove('video').dump()

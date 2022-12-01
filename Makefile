@@ -4,7 +4,7 @@ CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 dLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${data}"
 jLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${json}"
 
-.PHONY: zip, clean, down, setup, run, view, a, sw, dp, fw, rm, cm
+.PHONY: zip, clean, down, setup, run, sw, dp, ds, jn, rm, cm
 
 default:
 	docker compose up -d
@@ -14,7 +14,7 @@ default:
 	cp -r data/video ./
 	cp -r data/archive ./
 	rm -f -R __MACOSX data data.zip json.zip
-	mkdir flow out test
+	mkdir flow out test flow/video
 	mkdir out/video out/video/cam out/video/edited out/video/removed
 	mkdir out/img out/model out/src out/src/edited out/src/removed
 zip:
@@ -35,20 +35,16 @@ setup:
 	make dp
 run:
 	python main.py
-	make fw
-view:
-	make a
+	make ds
 
-a:
-	make fw
-	make rm
-	make cm
 sw:
 	python monitor.py show
 dp:
 	python monitor.py dump
-fw:
-	python monitor.py flow
+ds:
+	python monitor.py dist
+jn:
+	python monitor.py json
 rm:
 	python monitor.py remove
 cm:

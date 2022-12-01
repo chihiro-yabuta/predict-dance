@@ -5,16 +5,16 @@ from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from .common import size, batch, arr_size
 from .read import initial_rang
 
-class Flow:
+class Dist:
     def __init__(self, filename, model):
         self.filename = filename.replace('.mp4', '')
-        os.mkdir(f'flow/{self.filename}')
+        os.mkdir(f'flow/dist/{self.filename}')
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
         self.frame, self.model = len(self.data), model
 
     def read(self):
-        print('flow '+ f'{self.filename}.mp4')
+        print('analyze dist of '+ f'{self.filename}.mp4')
         x, arr, n = 500, np.array([]), 0
         for fr in tqdm(range(self.frame-arr_size)):
             res = self.forward(fr)
@@ -45,7 +45,31 @@ class Flow:
         ax2.plot(arr[:, 1])
         ax3.plot(arr[:, 2])
         plt.close(fig)
-        fig.savefig(f'flow/{self.filename}/{self.filename}_{n}.png')
+        fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.png')
+
+class Json:
+    def __init__(self, filename, rang):
+        self.filename = filename.replace('.mp4', '')
+        self.st, self.en = rang
+
+    def read(self):
+        video = f'test/{self.filename}.mp4'
+        edited = f'flow/video/{self.filename}.mp4'
+
+        cap = cv2.VideoCapture(video)
+        f = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        fmt = cv2.VideoWriter_fourcc('m','p','4','v')
+        writer = cv2.VideoWriter(edited, fmt, fps, (w, h))
+
+        for i in tqdm(range(self.en if self.en < f else f)):
+            _, frame = cap.read()
+            if i > self.st:
+                writer.write(frame)
 
 class Remove:
     def __init__(self, dirname):
