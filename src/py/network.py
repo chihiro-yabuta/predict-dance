@@ -33,7 +33,7 @@ class NeuralNetwork(nn.Module):
             nn.Tanh(),
             nn.Dropout(),
             nn.Linear(32, 8),
-            nn.BatchNorm1d(8),
+            nn.Tanh(),
             nn.Linear(8, lenA),
             nn.Softmax(1)
         )
