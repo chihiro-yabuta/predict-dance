@@ -1,8 +1,8 @@
-import cv2, os, pickle, numpy as np, torch, matplotlib.pyplot as plt
+import cv2, os, json, pickle, numpy as np, torch, matplotlib.pyplot as plt
 from tqdm import tqdm
 from rembg.bg import remove
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-from .common import size, batch, arr_size
+from .common import size, batch, arr_size, graph
 from .read import initial_rang
 
 class Dist:
@@ -32,27 +32,59 @@ class Dist:
 
     def plot(self, arr, n):
         fig = plt.figure(figsize=(24, 12), tight_layout=True)
-        ax1 = fig.add_subplot(3, 1, 1)
-        ax2 = fig.add_subplot(3, 1, 2)
-        ax3 = fig.add_subplot(3, 1, 3)
-        ax1.set_ylim(-0.1, 1.1)
-        ax2.set_ylim(-0.1, 1.1)
-        ax3.set_ylim(-0.1, 1.1)
-        ax1.set_title('elegant')
-        ax2.set_title('dance')
-        ax3.set_title('other')
-        ax1.plot(arr[:, 0])
-        ax2.plot(arr[:, 1])
-        ax3.plot(arr[:, 2])
+        graph(fig, arr, ['elegant', 'dance', 'other'], 1.1, -0.1)
         plt.close(fig)
         fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.png')
 
 class Json:
-    def __init__(self, filename, rang):
+    def __init__(self, filename):
         self.filename = filename.replace('.mp4', '')
-        self.st, self.en = rang
+        os.mkdir(f'flow/json/{self.filename}')
+        self.target = ['RWrist_x', 'LWrist_x', 'RWrist_y', 'LWrist_y']
 
-    def read(self):
+    def dist(self):
+        pos =['Nose_x','Nose_y','P0','Neck_x','Neck_y','P1','RShoulder_x','RShoulder_y',
+                'P2','RElbow_x','RElbow_y','P3','RWrist_x','RWrist_y','P4','LShoulder_x',
+                'LShoulder_y','P5','LElbow_x','LElbow_y','P6','LWrist_x','LWrist_y','P7',
+                'MidHip_x','MidHip_y','P8','RHip_x','RHip_y','P9','RKnee_x','RKnee_y',
+                'P10','RAnkle_x','RAnkle_y','P11','LHip_x','LHip_y','P12','LKnee_x',
+                'LKnee_y','P13','LAnkle_x','LAnkle_y','P14','REye_x','REye_y','P15',
+                'LEye_x','LEye_y','P16','REar_x','REar_y','P17','LEar_x','LEar_y','P18',
+                'LBigToe_x','LBigToe_y','P19','LSmallToe_x','LSmallToe_y','P20','LHeel_x',
+                'LHeel_y','P21','RBigToe_x','RBigToe_y','P22','RSmallToe_x','RSmallToe_y',
+                'P23','RHeel_x','RHeel_y','P24']
+
+        print('analyze json of '+ f'{self.filename}.mp4')
+        arr = np.array([])
+        idx = list(map(lambda s: pos.index(s), self.target))
+
+        for jname in tqdm(os.listdir(f'json/{self.filename}')):
+            with open(f'json/{self.filename}/{jname}') as f:
+                data = json.load(f)['people'][0]['pose_keypoints_2d']
+            d = np.array([])
+            for i in idx:
+                d = np.append(d, data[i])
+            arr = d[np.newaxis,:] if arr.size == 0 else np.append(arr, d[np.newaxis,:], axis=0)
+
+        x, n = 500, 0
+        for i in range(len(arr)//x+1):
+            d = arr[i*x:(i+1)*x]
+            n += len(d)
+            self.plot(d, n)
+
+    def plot(self, arr, n):
+        fig = plt.figure(figsize=(36, 12), tight_layout=True)
+        graph(fig, arr, self.target, 1000, 0)
+        plt.close(fig)
+        fig.savefig(f'flow/json/{self.filename}/{n}.png')
+
+    def cut(self, irang):
+        print('analyze part of '+ f'{self.filename}.mp4')
+        try:
+            rang = irang[self.filename]
+        except:
+            rang = [int(input('start frame: ')), int(input('end frame: '))]
+
         video = f'test/{self.filename}.mp4'
         edited = f'flow/video/{self.filename}.mp4'
 
@@ -66,9 +98,9 @@ class Json:
         fmt = cv2.VideoWriter_fourcc('m','p','4','v')
         writer = cv2.VideoWriter(edited, fmt, fps, (w, h))
 
-        for i in tqdm(range(self.en if self.en < f else f)):
+        for i in tqdm(range(rang[1] if rang[1] < f else f)):
             _, frame = cap.read()
-            if i > self.st:
+            if i > rang[0]:
                 writer.write(frame)
 
 class Remove:

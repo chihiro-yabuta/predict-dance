@@ -12,7 +12,7 @@ batch, lenE = 100, size**2
 def all_read(dirname, force=False):
     r = Read(dirname, size, force)
     if force if force else input('update data [y/n]: ') == 'y':
-        data, teachs, div = np.array([]), np.array([]), np.array([])
+        data, teachs, div = [np.array([]) for _ in range(3)]
         other = [0 for _ in range(lenA-1)]+[1]
         for filename in os.listdir(dirname):
             filename = filename.replace('.mp4', '')
@@ -36,3 +36,10 @@ def test_read():
             return pickle.load(f)
     else:
         return all_read('test')
+
+def graph(fig, arr, graphname, ymax, ymin):
+    for i, name in enumerate(graphname):
+        ax = fig.add_subplot(len(graphname), 1, i+1)
+        ax.set_ylim(ymin, ymax)
+        ax.set_title(name)
+        ax.plot(arr[:, i])

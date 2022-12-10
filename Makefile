@@ -1,5 +1,5 @@
 data ?= "188JVmh_h903YI0FR7mgAKU2MVosFMjaD"
-json ?= "1MyPnhayeU9Zi6Mlh8LOLg8nlfAhhy2aB"
+json ?= "1vPzsWAHS43LwtIzR4V12Y529kKFKrx5N"
 CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 dLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${data}"
 jLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${json}"
@@ -14,7 +14,7 @@ default:
 	cp -r data/video ./
 	cp -r data/archive ./
 	rm -f -R __MACOSX data data.zip json.zip
-	mkdir flow out test flow/video
+	mkdir flow out test flow/video flow/json
 	mkdir out/video out/video/cam out/video/edited out/video/removed
 	mkdir out/img out/model out/src out/src/edited out/src/removed
 zip:

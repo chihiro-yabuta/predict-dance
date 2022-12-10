@@ -26,16 +26,14 @@ if args == 'dist':
 
 if args == 'json':
     irang = {
-        'thai_elegant.mp4': [840, 930],
+        'thai_elegant': [840, 930],
     }
-
+    shutil.rmtree('flow/json', ignore_errors=True)
+    os.mkdir('flow/json')
     for s in os.listdir('test'):
-        try:
-            rang = irang[s]
-        except:
-            rang = [int(input('start frame: ')), int(input('end frame: '))]
-        dist = Json(s, rang)
-        dist.read()
+        json = Json(s)
+        json.dist()
+        json.cut(irang)
 
 if args == 'remove':
     Remove('video').dump()
