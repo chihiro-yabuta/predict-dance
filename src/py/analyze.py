@@ -15,12 +15,12 @@ class Dist:
 
     def read(self):
         print('analyze dist of '+ f'{self.filename}.mp4')
-        x, arr, n = 500, np.array([]), 0
+        grang, arr, n = 500, np.array([]), 0
         for fr in tqdm(range(self.frame-arr_size)):
             res = self.forward(fr)
             arr = res if arr.size == 0 else np.append(arr, res, axis=0)
-        for i in range(len(arr)//x+1):
-            d = arr[i*x:(i+1)*x]
+        for i in range(len(arr)//grang+1):
+            d = arr[i*grang:(i+1)*grang]
             n += len(d)
             self.plot(d, n)
 
@@ -64,19 +64,14 @@ class Json:
             d = np.array([])
             for i in idx:
                 d = np.append(d, data[i])
-            arr = d[np.newaxis,:] if arr.size == 0 else np.append(arr, d[np.newaxis,:], axis=0)
+            d = d[np.newaxis,:]
+            arr = d if arr.size == 0 else np.append(arr, d, axis=0)
 
-        x, n = 500, 0
-        for i in range(len(arr)//x+1):
-            d = arr[i*x:(i+1)*x]
+        grang, n = 500, 0
+        for i in range(len(arr)//grang+1):
+            d = arr[i*grang:(i+1)*grang]
             n += len(d)
             self.plot(d, n)
-
-    def plot(self, arr, n):
-        fig = plt.figure(figsize=(36, 12), tight_layout=True)
-        graph(fig, arr, self.target, 1000, 0)
-        plt.close(fig)
-        fig.savefig(f'flow/json/{self.filename}/{n}.png')
 
     def cut(self, irang):
         print('analyze part of '+ f'{self.filename}.mp4')
@@ -102,6 +97,12 @@ class Json:
             _, frame = cap.read()
             if i > rang[0]:
                 writer.write(frame)
+
+    def plot(self, arr, n):
+        fig = plt.figure(figsize=(36, 12), tight_layout=True)
+        graph(fig, arr, self.target, 10, -1)
+        plt.close(fig)
+        fig.savefig(f'flow/json/{self.filename}/{n}.png')
 
 class Remove:
     def __init__(self, dirname):
