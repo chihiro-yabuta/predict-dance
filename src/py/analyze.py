@@ -60,10 +60,20 @@ class Json:
 
         for jname in tqdm(os.listdir(f'json/{self.filename}')):
             with open(f'json/{self.filename}/{jname}') as f:
-                data = json.load(f)['people'][0]['pose_keypoints_2d']
+                data = json.load(f)['people']
+                rdata = data[0]['pose_keypoints_2d'][pos.index('RShoulder_x')]
+                ldata = data[0]['pose_keypoints_2d'][pos.index('LShoulder_x')]
+                res = data[0]['pose_keypoints_2d']
+
+                for n, d in enumerate(data[1:]):
+                    rd = d['pose_keypoints_2d'][pos.index('RShoulder_x')]
+                    ld = d['pose_keypoints_2d'][pos.index('LShoulder_x')]
+                    if ld-rd > ldata-rdata:
+                        res = data[n+1]['pose_keypoints_2d']
+
             d = np.array([])
             for i in idx:
-                d = np.append(d, data[i])
+                d = np.append(d, res[i])
             d = d[np.newaxis,:]
             arr = d if arr.size == 0 else np.append(arr, d, axis=0)
 
@@ -100,7 +110,7 @@ class Json:
 
     def plot(self, arr, n):
         fig = plt.figure(figsize=(36, 12), tight_layout=True)
-        graph(fig, arr, self.target, 10, -1)
+        graph(fig, arr, self.target, 2000, -100)
         plt.close(fig)
         fig.savefig(f'flow/json/{self.filename}/{n}.png')
 
@@ -195,5 +205,4 @@ class Cam:
         idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
         input_tensor = torch.Tensor(self.data[idx])
         res = self.cam_model(input_tensor, self.targets)
-        res = torch.tanh(torch.from_numpy(res)).numpy()
         return res

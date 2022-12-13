@@ -4,7 +4,7 @@ CODE ?= "$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
 dLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${data}"
 jLb = "https://drive.google.com/uc?export=download&confirm=${CODE}&id=${json}"
 
-.PHONY: zip, clean, down, setup, run, sw, dp, ds, jn, rm, cm
+.PHONY: zip, clean, down, setup, run, sw, dp, ds, jn, rm, ccm, tcm
 
 default:
 	docker compose up -d
@@ -47,5 +47,7 @@ jn:
 	python monitor.py json
 rm:
 	python monitor.py remove
-cm:
-	python monitor.py cam
+ccm:
+	python monitor.py conv_cam
+tcm:
+	python monitor.py trans_cam

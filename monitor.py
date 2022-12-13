@@ -16,6 +16,7 @@ if args == 'dump':
 
 if args == 'dist':
     model = NeuralNetwork()
+    model.eval()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
     shutil.rmtree('flow/dist', ignore_errors=True)
     os.mkdir('flow/dist')
@@ -40,8 +41,21 @@ if args == 'remove':
     Remove('archive').dump()
     Remove('').compare()
 
-if args == 'cam':
+if args == 'conv_cam':
     model = NeuralNetwork()
+    model.eval()
+    model.load_state_dict(torch.load('out/model/model_weights.pth'))
+    conv = model.convL
+
+    cam_model = GradCAM(model, conv)
+
+    for s in os.listdir('out/video/edited'):
+        cam = Cam(s, cam_model)
+        cam.dump()
+
+if args == 'trans_cam':
+    model = NeuralNetwork()
+    model.eval()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
     enc = model.encoder.layers
 
