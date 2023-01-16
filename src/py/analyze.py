@@ -34,7 +34,7 @@ class Dist:
         fig = plt.figure(figsize=(24, 12), tight_layout=True)
         graph(fig, arr, ['elegant', 'dance', 'other'], 1.1, -0.1)
         plt.close(fig)
-        fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.png')
+        fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.pdf')
 
 class Json:
     def __init__(self, filename):
@@ -112,7 +112,7 @@ class Json:
         fig = plt.figure(figsize=(36, 12), tight_layout=True)
         graph(fig, arr, self.target, 2000, -100)
         plt.close(fig)
-        fig.savefig(f'flow/json/{self.filename}/{n}.png')
+        fig.savefig(f'flow/json/{self.filename}/{n}.pdf')
 
 class Remove:
     def __init__(self, dirname):

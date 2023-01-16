@@ -35,6 +35,7 @@ setup:
 	make dp
 run:
 	python main.py
+	make ccm
 	make ds
 
 sw:

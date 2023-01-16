@@ -10,7 +10,7 @@ class plot:
         fig = plt.figure(figsize=(20, 4), tight_layout=True)
         ax = fig.add_subplot(1, 1, 1)
         ax.plot(loss)
-        fig.savefig(f'out/img/loss/epoch_{str(self.epoch)}')
+        fig.savefig(f'out/img/loss/epoch_{str(self.epoch)}.pdf')
 
     def saveimg(self, m, ans, idx):
         conv, em, enc = map(lambda l: l[0].detach().clone(), (m.c,m.em,m.e))
@@ -25,7 +25,7 @@ class plot:
         self.eachplot((conv, em, enc))
         s = 'test' if self.test else 'epoch_'+str(self.epoch)
         plt.close(self.fig)
-        self.fig.savefig(f'out/img/{s}/estimate_{idx}')
+        self.fig.savefig(f'out/img/{s}/estimate_{idx}.pdf')
 
     def eachplot(self, nns):
         for ax, nn in zip(self.fig.axes, nns):
