@@ -10,6 +10,9 @@ class plot:
         fig = plt.figure(figsize=(20, 4), tight_layout=True)
         ax = fig.add_subplot(1, 1, 1)
         ax.plot(loss)
+        ax.set_ylim(0.5, 1.2)
+        ax.set_ylabel('loss')
+        ax.set_xlabel('train number')
         fig.savefig(f'out/img/loss/epoch_{str(self.epoch)}.pdf')
 
     def saveimg(self, m, ans, idx):
