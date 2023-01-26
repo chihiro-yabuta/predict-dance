@@ -37,9 +37,11 @@ def test_read():
     else:
         return all_read('test')
 
-def graph(fig, arr, graphname, ymax, ymin):
+def graph(fig, arr, graphname, ymax, ymin, ylabel, xlabel):
     for i, name in enumerate(graphname):
         ax = fig.add_subplot(len(graphname), 1, i+1)
+        ax.set_ylabel(ylabel)
+        ax.set_xlabel(xlabel)
         ax.set_ylim(ymin, ymax)
         ax.set_title(name)
         ax.plot(arr[:, i])

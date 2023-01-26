@@ -32,7 +32,7 @@ class Dist:
 
     def plot(self, arr, n):
         fig = plt.figure(figsize=(24, 12), tight_layout=True)
-        graph(fig, arr, ['elegant', 'dance', 'other'], 1.1, -0.1)
+        graph(fig, arr, ['elegant', 'dance', 'other'], 1.1, -0.1, 'percent', 'frame')
         plt.close(fig)
         fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.pdf')
 
@@ -110,7 +110,7 @@ class Json:
 
     def plot(self, arr, n):
         fig = plt.figure(figsize=(36, 12), tight_layout=True)
-        graph(fig, arr, self.target, 2000, -100)
+        graph(fig, arr, self.target, 2000, -100, 'position', 'frame')
         plt.close(fig)
         fig.savefig(f'flow/json/{self.filename}/{n}.pdf')
 
