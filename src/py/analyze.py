@@ -187,7 +187,7 @@ class Cam:
         fmt = cv2.VideoWriter_fourcc('m','p','4','v')
         writer = cv2.VideoWriter(cam, fmt, fps, (size*2, size), 0)
 
-        imgs = np.zeros((frame_count, size, size))
+        imgs, res = np.zeros((frame_count, size, size)), np.array([])
         for fr in tqdm(range(frame_count)):
             if frame_count-arr_size < fr+1:
                 mean = frame_count-fr
@@ -198,8 +198,13 @@ class Cam:
                     mean = arr_size
                 imgs[fr:fr+arr_size] += self.run(fr)
             img = np.where(imgs[fr]/mean < r, 0, imgs[fr]*255/mean)
+            res = img[np.newaxis] if res.size == 0 else np.append(res, img[np.newaxis], axis=0)
             cat = np.append(img, self.data[fr][0], axis=1)
             writer.write(cat.astype(np.uint8))
+        res = np.where(res != 0, 1, 0)
+        top, mid, btm = res[:,:21,:], res[:,21:43,:], res[:,43:64,:]
+        top, mid, btm = list(map(lambda e: e.sum()/np.prod(e.shape)*100, (top, mid, btm)))
+        print(f'{self.filename} -> top:{(top):>0.1f}% middle:{(mid):>0.1f}% bottom:{(btm):>0.1f}%')
 
     def run(self, fr):
         idx = np.arange(fr,fr+arr_size).repeat(batch).reshape((batch,-1))
