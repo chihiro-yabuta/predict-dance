@@ -18,8 +18,8 @@ if args == 'dist':
     model = NeuralNetwork()
     model.eval()
     model.load_state_dict(torch.load('out/model/model_weights.pth'))
-    shutil.rmtree('flow/dist', ignore_errors=True)
-    os.mkdir('flow/dist')
+    shutil.rmtree('out/flow/dist', ignore_errors=True)
+    os.mkdir('out/flow/dist')
 
     for s in os.listdir('out/video/edited'):
         dist = Dist(s, model)
@@ -29,8 +29,10 @@ if args == 'json':
     irang = {
         'thai_elegant': [840, 930],
     }
-    shutil.rmtree('flow/json', ignore_errors=True)
-    os.mkdir('flow/json')
+    shutil.rmtree('out/flow/json', ignore_errors=True)
+    os.mkdir('out/flow/json')
+    shutil.rmtree('out/flow/video', ignore_errors=True)
+    os.mkdir('out/flow/video')
     for s in os.listdir('test'):
         json = Json(s)
         json.dist()

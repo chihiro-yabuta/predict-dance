@@ -44,32 +44,30 @@ I show you tree to understand easily.
 <pre>
 .
 ├── archive
-│   ├── *.mp4 (for stock)
-├── flow
-│   ├── *.png (for visible dist)
+│   ├── *.mp4 (pred video)
 ├── out
-│   ├── video
+│   ├── video (stock visible pred)
 │   │   ├── cam
 │   │   │   ├── *.mp4
 │   │   ├── edited
 │   │   │   ├── *.mp4
 │   │   ├── removed
 │   │   │   ├── *.mp4
-│   ├── img (this directory is created automatically)
+│   └── flow (stock visible pred detail)
 │   │   ├── ...
-│   ├── model
-│   │   ├── *.pkl
-│   └── src
+│   └── src (stock data)
 │   │   ├── edited
 │   │   │   ├── *.pkl
 │   │   ├── removed
 │   │   │   ├── *.pkl
+│   ├── model (stock overall data)
+│   │   ├── *.pkl
 ├── src
 │   ├── ...
 ├── test
-│   ├── *.mp4 (for test)
+│   ├── *.mp4 (test video)
 └── video
-    ├── *.mp4 (for prediction)
+    ├── *.mp4 (study video)
 </pre>
 you can prepare data to predict to type this command.
 ```

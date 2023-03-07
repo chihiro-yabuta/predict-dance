@@ -1,7 +1,6 @@
 .DS_Store
 __pycache__/
 archive/
-flow/
 out/
 test/
 video/

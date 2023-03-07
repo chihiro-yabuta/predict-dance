@@ -8,7 +8,7 @@ from .read import initial_rang
 class Dist:
     def __init__(self, filename, model):
         self.filename = filename.replace('.mp4', '')
-        os.mkdir(f'flow/dist/{self.filename}')
+        os.mkdir(f'out/flow/dist/{self.filename}')
         with open(f'out/src/edited/{self.filename}.pkl', 'rb') as f:
             self.data = pickle.load(f)
         self.frame, self.model = len(self.data), model
@@ -34,12 +34,12 @@ class Dist:
         fig = plt.figure(figsize=(24, 12), tight_layout=True)
         graph(fig, arr, ['elegant', 'dance', 'other'], 1.1, -0.1, 'percent', 'frame')
         plt.close(fig)
-        fig.savefig(f'flow/dist/{self.filename}/{self.filename}_{n}.pdf')
+        fig.savefig(f'out/flow/dist/{self.filename}/{self.filename}_{n}.pdf')
 
 class Json:
     def __init__(self, filename):
         self.filename = filename.replace('.mp4', '')
-        os.mkdir(f'flow/json/{self.filename}')
+        os.mkdir(f'out/flow/json/{self.filename}')
         self.target = ['RWrist_x', 'LWrist_x', 'RWrist_y', 'LWrist_y']
 
     def dist(self):
@@ -91,7 +91,7 @@ class Json:
             rang = [int(input('start frame: ')), int(input('end frame: '))]
 
         video = f'test/{self.filename}.mp4'
-        edited = f'flow/video/{self.filename}.mp4'
+        edited = f'out/flow/video/{self.filename}.mp4'
 
         cap = cv2.VideoCapture(video)
         f = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -112,7 +112,7 @@ class Json:
         fig = plt.figure(figsize=(36, 12), tight_layout=True)
         graph(fig, arr, self.target, 2000, -100, 'position', 'frame')
         plt.close(fig)
-        fig.savefig(f'flow/json/{self.filename}/{n}.pdf')
+        fig.savefig(f'out/flow/json/{self.filename}/{n}.pdf')
 
 class Remove:
     def __init__(self, dirname):
